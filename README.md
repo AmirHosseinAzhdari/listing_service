@@ -2,7 +2,7 @@
 
 ***
 
-a Simple Django reservation project using DRF and including features:
+A Simple Django reservation project using DRF and including features:
 * class based views, viewsets and generics
 * model serialization and validation
 * code documentations
