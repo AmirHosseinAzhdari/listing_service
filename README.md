@@ -14,13 +14,9 @@ A Simple Django reservation project using DRF and including features:
 
 ## API Documentations
 
-To view the endpoints documents, you can open your run project in the browser.
+To view the endpoints documents(swagger), you can open your run project in the browser.
 For default: `http://127.0.0.1:8000/`
 
-
-```
-./manage.py runserver
-```
 
 ## Test APIs
 
