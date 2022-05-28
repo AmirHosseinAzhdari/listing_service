@@ -1,6 +1,6 @@
 from rest_framework import status, viewsets, generics, views
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from .authentication import ListingValidateAuthentication
 from .helper import validate_date_format, validate_room_in_listing
 from .models import Room, Reservation, Listing
@@ -29,6 +29,16 @@ class ListingViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="listing",
+            type=int,
+            location=OpenApiParameter.HEADER,
+            description="listing id",
+        ),
+    ]
+)
 class RoomViewSet(viewsets.ViewSet):
     model_name = Room
     queryset = model_name.objects.all()
@@ -56,6 +66,16 @@ class RoomViewSet(viewsets.ViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="listing",
+            type=int,
+            location=OpenApiParameter.HEADER,
+            description="listing id",
+        ),
+    ]
+)
 class AvailableRoomsListView(generics.ListAPIView):
     serializer_class = RoomSerializer
     authentication_classes = [ListingValidateAuthentication]
@@ -74,6 +94,16 @@ class AvailableRoomsListView(generics.ListAPIView):
         return []
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="listing",
+            type=int,
+            location=OpenApiParameter.HEADER,
+            description="listing id",
+        ),
+    ]
+)
 class ReservationView(views.APIView):
     authentication_classes = [ListingValidateAuthentication]
 
@@ -96,6 +126,16 @@ class ReservationView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="listing",
+            type=int,
+            location=OpenApiParameter.HEADER,
+            description="listing id",
+        ),
+    ]
+)
 class ReservationRoomListView(generics.ListAPIView):
     serializer_class = ReportRoomSerializer
     authentication_classes = [ListingValidateAuthentication]
