@@ -4,7 +4,12 @@ from drf_spectacular.utils import extend_schema
 from .authentication import ListingValidateAuthentication
 from .helper import validate_date_format, validate_room_in_listing
 from .models import Room, Reservation, Listing
-from .serializer import RoomSerializer, ReservationSerializer, ReportRoomSerializer, ListingSerializer
+from .serializer import (
+    RoomSerializer,
+    ReservationSerializer,
+    ReportRoomSerializer,
+    ListingSerializer,
+)
 
 
 class ListingViewSet(viewsets.ViewSet):
@@ -31,7 +36,9 @@ class RoomViewSet(viewsets.ViewSet):
     authentication_classes = [ListingValidateAuthentication]
 
     def list(self, request):
-        queryset = self.model_name.objects.filter(listing=int(self.request.headers["listing"]))
+        queryset = self.model_name.objects.filter(
+            listing=int(self.request.headers["listing"])
+        )
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -57,8 +64,11 @@ class AvailableRoomsListView(generics.ListAPIView):
         date = self.request.query_params.get("date")
         if date not in ["", None] and validate_date_format(date):
             rooms = Room.objects.filter(listing=int(self.request.headers["listing"]))
-            reservations_on_date = Reservation.objects.filter(room__listing=int(self.request.headers["listing"]),
-                                                              from_date__lte=date, to_date__gte=date).values('room')
+            reservations_on_date = Reservation.objects.filter(
+                room__listing=int(self.request.headers["listing"]),
+                from_date__lte=date,
+                to_date__gte=date,
+            ).values("room")
             reserved_ids = [i["room"] for i in reservations_on_date]
             return [r for r in rooms if r.id not in reserved_ids]
         return []
@@ -74,8 +84,13 @@ class ReservationView(views.APIView):
     def post(self, request):
         serializer = ReservationSerializer(data=request.data)
         if serializer.is_valid():
-            if not validate_room_in_listing(int(request.headers["listing"]), serializer.validated_data["room"].id):
-                return Response({"room": "room does not exist in current listing"}, status=status.HTTP_400_BAD_REQUEST)
+            if not validate_room_in_listing(
+                int(request.headers["listing"]), serializer.validated_data["room"].id
+            ):
+                return Response(
+                    {"room": "room does not exist in current listing"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

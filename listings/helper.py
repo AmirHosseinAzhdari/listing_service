@@ -14,7 +14,9 @@ def check_room_reserved(room_id: int, from_date: str, to_date: str) -> bool:
     Returns:
         bool: if exists returns True else False
     """
-    if Reservation.objects.filter(room__id=room_id, from_date__lte=to_date, to_date__gte=from_date).exists():
+    if Reservation.objects.filter(
+        room__id=room_id, from_date__lte=to_date, to_date__gte=from_date
+    ).exists():
         return True
     return False
 
@@ -36,7 +38,7 @@ def validate_date_format(date: str) -> bool:
 
 
 def validate_date_range(start_date: str, end_date: str) -> bool:
-    """Validate order of date 
+    """Validate order of date
 
     Args:
         start_date (str): smaller date
@@ -45,18 +47,41 @@ def validate_date_range(start_date: str, end_date: str) -> bool:
     Returns:
         bool: False if start date is biggest and True if end date is biggest
     """
-    if datetime.strptime(str(start_date), '%Y-%m-%d') > datetime.strptime(str(end_date), '%Y-%m-%d'):
+    if datetime.strptime(str(start_date), "%Y-%m-%d") > datetime.strptime(
+        str(end_date), "%Y-%m-%d"
+    ):
         return False
     return True
 
 
 def validate_listing(listing_id: str) -> bool:
-    if listing_id and listing_id.isnumeric() and Listing.objects.filter(id=int(listing_id)).exists():
+    """Validate listing id and existance of a listing in database
+
+    Args:
+        listing_id (str): listing id as string
+
+    Returns:
+        bool: True if listing exists else False
+    """
+    if (
+        listing_id
+        and listing_id.isnumeric()
+        and Listing.objects.filter(id=int(listing_id)).exists()
+    ):
         return True
     return False
 
 
 def validate_room_in_listing(listing_id: int, room_id: int) -> bool:
+    """Validate room exists with defined listing_id and room_id
+
+    Args:
+        listing_id (int): id of listing
+        room_id (int): id of room
+
+    Returns:
+        bool: True if room exists else False
+    """
     if Room.objects.filter(listing=listing_id, id=room_id).exists():
         return True
     return False

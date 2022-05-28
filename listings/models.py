@@ -16,9 +16,9 @@ class Room(models.Model):
     price = models.IntegerField(help_text="price of room for one day")
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
         db_table = "room"
-        unique_together = ['listing', 'number']
+        unique_together = ["listing", "number"]
 
 
 class Reservation(models.Model):

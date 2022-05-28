@@ -5,7 +5,9 @@ from . import views
 app_name = "listings"
 
 urlpatterns = [
-    path("room/available/", views.AvailableRoomsListView.as_view(), name="room-available"),
+    path(
+        "room/available/", views.AvailableRoomsListView.as_view(), name="room-available"
+    ),
     path("room/reserve/", views.ReservationView.as_view(), name="room-reserve"),
     path("room/report/", views.ReservationRoomListView.as_view(), name="room-report"),
 ]

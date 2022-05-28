@@ -23,9 +23,13 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if not validate_date_range(attrs["from_date"], attrs["to_date"]):
-            raise serializers.ValidationError({"from_date": "from date must smaller than equal from to date"})
+            raise serializers.ValidationError(
+                {"from_date": "from date must smaller than equal from to date"}
+            )
         if check_room_reserved(attrs["room"].id, attrs["from_date"], attrs["to_date"]):
-            raise serializers.ValidationError({"room": "reservation for this room in defined time already exist"})
+            raise serializers.ValidationError(
+                {"room": "reservation for this room in defined time already exist"}
+            )
         return attrs
 
 
